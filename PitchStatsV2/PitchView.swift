@@ -10,9 +10,14 @@ struct PitchView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var markers: [Marker] = []
     @State private var selectedColor: Color = .clear
+    @State private var tempSelectedColor: Color = .clear // Temporary color holder
     @State private var showingNumberInput = false
+    @State private var showingColorPicker = false
     @State private var newMarkerLocation: CGPoint?
     @State private var inputNumber: String = ""
+    @State private var colorOptions: [Color] = [.red, .blue, .green, .yellow]
+    @State private var showingDeletionConfirm = false
+    @State private var colorToDelete: Color?
 
     var body: some View {
         VStack {
@@ -53,19 +58,37 @@ struct PitchView: View {
             }
 
             HStack {
-                ForEach(MarkerColor.allCases, id: \.self) { color in
+                Button(action: {
+                    self.showingColorPicker = true
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title)
+                        .frame(width: 30, height: 30)
+                        .foregroundColor(.black)
+                }
+
+                ForEach(colorOptions, id: \.self) { color in
                     Button(action: {
-                        self.selectedColor = color.color
+                        self.selectedColor = color
                     }) {
                         Circle()
-                            .fill(color.color)
+                            .fill(color)
                             .frame(width: 30, height: 30)
                             .overlay(
                                 Circle()
-                                    .stroke(Color.white, lineWidth: selectedColor == color.color ? 3 : 0)
+                                    .stroke(Color.white, lineWidth: selectedColor == color ? 3 : 0)
                             )
                     }
+                    .simultaneousGesture(
+                        LongPressGesture(minimumDuration: 0.5)
+                            .onEnded { _ in
+                                print("Long press detected") // Debugging line
+                                self.colorToDelete = color
+                                self.showingDeletionConfirm = true
+                            }
+                    )
                 }
+
                 Button(action: {
                     self.removeLastMarker()
                 }) {
@@ -89,6 +112,35 @@ struct PitchView: View {
                 self.showingNumberInput = false
                 self.inputNumber = ""
             }
+        }
+        .sheet(isPresented: $showingColorPicker) {
+            VStack {
+                ColorPicker("Pick a new color", selection: $tempSelectedColor, supportsOpacity: false)
+                    .padding()
+                Button("Confirm Color") {
+                    selectedColor = tempSelectedColor.opacity(1.0)
+                    if !colorOptions.contains(where: { $0 == selectedColor }) {
+                        colorOptions.append(selectedColor)
+                    }
+                    showingColorPicker = false
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+            }
+        }
+        .alert(isPresented: $showingDeletionConfirm) {
+            Alert(
+                title: Text("Delete Color"),
+                message: Text("Are you sure you want to delete this color?"),
+                primaryButton: .destructive(Text("Confirm")) {
+                    if let color = self.colorToDelete {
+                        self.colorOptions.removeAll { $0 == color }
+                    }
+                },
+                secondaryButton: .cancel()
+            )
         }
     }
 
@@ -166,21 +218,10 @@ struct Marker: Identifiable {
     var number: String
 }
 
-enum MarkerColor: CaseIterable {
-    case red, blue, green, yellow
-
-    var color: Color {
-        switch self {
-        case .red: return .red
-        case .blue: return .blue
-        case .green: return .green
-        case .yellow: return .yellow
-        }
-    }
-}
-
 struct PitchView_Previews: PreviewProvider {
     static var previews: some View {
         PitchView()
     }
 }
+
+
