@@ -14,6 +14,8 @@
 		3C8765212B4BF791007A7806 /* PitchStatsV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8765202B4BF791007A7806 /* PitchStatsV2Tests.swift */; };
 		3C87652B2B4BF791007A7806 /* PitchStatsV2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C87652A2B4BF791007A7806 /* PitchStatsV2UITests.swift */; };
 		3C87652D2B4BF791007A7806 /* PitchStatsV2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C87652C2B4BF791007A7806 /* PitchStatsV2UITestsLaunchTests.swift */; };
+		3C87653A2B4BF7BE007A7806 /* NewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8765392B4BF7BE007A7806 /* NewGameView.swift */; };
+		3C8A57752B4BF84E00A0AC64 /* PitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8A57742B4BF84E00A0AC64 /* PitchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +47,8 @@
 		3C8765262B4BF791007A7806 /* PitchStatsV2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PitchStatsV2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C87652A2B4BF791007A7806 /* PitchStatsV2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchStatsV2UITests.swift; sourceTree = "<group>"; };
 		3C87652C2B4BF791007A7806 /* PitchStatsV2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchStatsV2UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3C8765392B4BF7BE007A7806 /* NewGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameView.swift; sourceTree = "<group>"; };
+		3C8A57742B4BF84E00A0AC64 /* PitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,8 @@
 			children = (
 				3C87650E2B4BF78D007A7806 /* PitchStatsV2App.swift */,
 				3C8765102B4BF78D007A7806 /* ContentView.swift */,
+				3C8765392B4BF7BE007A7806 /* NewGameView.swift */,
+				3C8A57742B4BF84E00A0AC64 /* PitchView.swift */,
 				3C8765122B4BF791007A7806 /* Assets.xcassets */,
 				3C8765142B4BF791007A7806 /* PitchStatsV2.entitlements */,
 				3C8765152B4BF791007A7806 /* Preview Content */,
@@ -260,7 +266,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C8765112B4BF78D007A7806 /* ContentView.swift in Sources */,
+				3C8A57752B4BF84E00A0AC64 /* PitchView.swift in Sources */,
 				3C87650F2B4BF78D007A7806 /* PitchStatsV2App.swift in Sources */,
+				3C87653A2B4BF7BE007A7806 /* NewGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
