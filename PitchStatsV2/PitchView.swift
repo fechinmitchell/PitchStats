@@ -49,8 +49,8 @@ struct PitchView: View {
     @State private var colorOptions: [ColorAction] = [
         ColorAction(color: .red, actionName: "Shot"),
         ColorAction(color: .blue, actionName: "Pass"),
-        ColorAction(color: .green, actionName: "Tackle"),
-        ColorAction(color: .yellow, actionName: "Run")
+        ColorAction(color: .green, actionName: "Tackle")
+        //ColorAction(color: .yellow, actionName: "Kick Out")
     ]
     @State private var showingDeletionConfirm = false
     @State private var colorActionToDelete: ColorAction?
@@ -58,7 +58,7 @@ struct PitchView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            Color.white.edgesIgnoringSafeArea(.all)
+            Color.black.edgesIgnoringSafeArea(.all)
 
             VStack {
                 homeAndStatsButtons
@@ -67,21 +67,22 @@ struct PitchView: View {
                 GeometryReader { geometry in
                     Image("pitch_image")
                         .resizable()
-                        .scaledToFill()
+                        .aspectRatio(contentMode: .fit) // This ensures the image fits the available space
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .contentShape(Rectangle())
                         .gesture(
                             DragGesture(minimumDistance: 0)
                                 .onEnded({ value in
-                                    let x = value.location.x / geometry.size.width
-                                    let y = value.location.y / geometry.size.height
+                                    let location = geometry.frame(in: .local).contains(value.location) ? value.location : CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                                    let x = location.x / geometry.size.width
+                                    let y = location.y / geometry.size.height
                                     self.newMarkerLocation = CGPoint(x: x, y: y)
                                     self.showingNumberInput = true
                                 })
                         )
                         .overlay(markerOverlay(in: geometry.size))
                 }
-                .padding(.top, 80)
+                .padding(.top, 10)
                 .padding(.bottom, 10)
             }
         VStack {
@@ -146,7 +147,7 @@ private var addColorButton: some View {
         Image(systemName: "plus.circle.fill")
             .font(.title)
             .frame(width: 30, height: 30)
-            .foregroundColor(.black)
+            .foregroundColor(.white)
     }
 }
 
@@ -173,6 +174,7 @@ private var colorActionButtons: some View {
             )
             Text(colorAction.actionName)
                 .font(.caption)
+                .foregroundColor(.white)
             }
     }
 }
@@ -186,6 +188,7 @@ private var undoButton: some View {
             .frame(width: 30, height: 30)
             .foregroundColor(.gray)
     }
+    .foregroundColor(.white)
 }
 
 private func markerOverlay(in size: CGSize) -> some View {
