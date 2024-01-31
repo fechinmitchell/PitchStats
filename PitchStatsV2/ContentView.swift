@@ -14,6 +14,13 @@ struct ContentView: View {
             Color.black.edgesIgnoringSafeArea(.all) // Set the background to black, including under the safe areas
 
             VStack(spacing: 20) {
+                
+                Image("Logo_PS") // Replace "logo" with the name of your logo image asset
+                                    .resizable() // Make the image resizable
+                                    .scaledToFit() // Scale the logo to fit its allocated space
+                                    .frame(width: 500, height: 300) // Set the frame to the desired width and height
+                                    .padding(.top, 10) // Optional padding from the top of the VStack
+
                 // New Game button
                 Button("New Game") {
                     showingNewGameView = true
@@ -22,7 +29,7 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity)
-                .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
+                .background(LinearGradient(gradient: Gradient(colors: [Color.green, Color.gray]), startPoint: .leading, endPoint: .trailing))
                 .cornerRadius(40)
                 .shadow(radius: 5)
                 .padding(.horizontal)
@@ -38,7 +45,7 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity)
-                .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
+                .background(LinearGradient(gradient: Gradient(colors: [Color.green, Color.gray]), startPoint: .leading, endPoint: .trailing))
                 .cornerRadius(40)
                 .shadow(radius: 5)
                 .padding(.horizontal)
@@ -54,7 +61,7 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity)
-                .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
+                .background(LinearGradient(gradient: Gradient(colors: [Color.green, Color.gray]), startPoint: .leading, endPoint: .trailing))
                 .cornerRadius(40)
                 .shadow(radius: 5)
                 .padding(.horizontal)
