@@ -25,12 +25,60 @@ struct ColorAction: Identifiable, Equatable, Hashable {
 
 struct StatsView: View {
     var stats: [String: Int]
+    var teamOneName: String
+    var teamTwoName: String
+    var markers: [Marker] // Assuming Marker is already defined as per your setup
 
     var body: some View {
-        VStack {
-            ForEach(stats.keys.sorted(), id: \.self) { key in
-                Text("\(key): \(stats[key, default: 0])")
+        ScrollView { // Ensures content fits even if it exceeds screen size
+            VStack(alignment: .leading) {
+                // Team names header
+                Text("\(teamOneName) Vs \(teamTwoName)")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.blue) // Customize this color as needed
+                    .padding()
+                    .frame(maxWidth: .infinity) // Use maxWidth to ensure the Text view takes up all available space
+                    .multilineTextAlignment(.center) // Center-align the text within its frame
+
+
+                Divider()
+
+                // Table header
+                HStack {
+                    Text("Action")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.secondary) // Subtle color for the header
+                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                    Text("Count")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.secondary) // Matching style for consistency
+                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
+                        .padding(.horizontal)
+                }
+                .padding(.vertical, 5)
+                .background(Color(UIColor.systemGray5)) // Slightly darker background for header
+                .cornerRadius(8)
+
+                // Stats rows
+                ForEach(stats.keys.sorted(), id: \.self) { key in
+                    HStack {
+                        Text(key)
+                            .fontWeight(.medium)
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal)
+                        Text("\(stats[key, default: 0])")
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
+                            .padding(.horizontal)
+                    }
+                    .padding(.vertical, 8)
+                    Divider() // Adds a divider between rows for clear separation
+                }
             }
+            .padding() // Padding for the entire VStack
         }
     }
 }
@@ -77,7 +125,6 @@ struct ArrowShape: Shape {
 
 
 
-
 struct PitchView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var markers: [Marker] = []
@@ -99,6 +146,8 @@ struct PitchView: View {
 
     var teamOneName: String
     var teamTwoName: String
+    var pitchType: PitchType // Make sure this line exists
+
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -107,7 +156,7 @@ struct PitchView: View {
                 //teamNamesVsView // Display team names at the top
                 homeAndStatsButtons.padding(.top, 50)
                 GeometryReader { geometry in
-                    Image("GAA_pitch_image")
+                    Image(pitchType == .gaa ? "GAA_pitch_image" : "Soccer_pitch_image")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: geometry.size.width, height: geometry.size.height)
@@ -145,7 +194,7 @@ struct PitchView: View {
             deletionAlert()
         }
         .sheet(isPresented: $showingStats) {
-            StatsView(stats: self.aggregateStats())
+            StatsView(stats: self.aggregateStats(), teamOneName: self.teamOneName, teamTwoName: self.teamTwoName, markers: self.markers)
         }
     }
     
@@ -369,7 +418,8 @@ struct PitchView: View {
     
     struct PitchView_Previews: PreviewProvider {
         static var previews: some View {
-            PitchView(teamOneName: "Team One", teamTwoName: "Team Two")
+            // Assuming 'gaa' is one of the cases in your PitchType enum
+            PitchView(teamOneName: "Team One", teamTwoName: "Team Two", pitchType: .gaa)
         }
     }
     
