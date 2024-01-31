@@ -52,7 +52,7 @@ struct ArrowShape: Shape {
             
             // Define the arrowhead size
             let arrowheadLength: CGFloat = 15
-            let arrowheadWidth: CGFloat = 10
+            //let arrowheadWidth: CGFloat = 10
             
             // Calculate two points that form the arrowhead
             let arrowPoint1 = CGPoint(
@@ -96,11 +96,15 @@ struct PitchView: View {
     @State private var showingDeletionConfirm = false
     @State private var colorActionToDelete: ColorAction?
     @State private var showingStats = false
-    
+
+    var teamOneName: String
+    var teamTwoName: String
+
     var body: some View {
         ZStack(alignment: .top) {
             Color.black.edgesIgnoringSafeArea(.all)
             VStack {
+                //teamNamesVsView // Display team names at the top
                 homeAndStatsButtons.padding(.top, 50)
                 GeometryReader { geometry in
                     Image("GAA_pitch_image")
@@ -124,7 +128,8 @@ struct PitchView: View {
                 .padding(.bottom, 10)
             }
             VStack {
-                Spacer().frame(height: 60)
+                Spacer().frame(height: 30)
+                teamNamesVsView // Add this line to display the team names with "Vs"
                 colorButtons.padding(.horizontal).padding(.bottom, 10)
                 Spacer()
             }
@@ -143,6 +148,26 @@ struct PitchView: View {
             StatsView(stats: self.aggregateStats())
         }
     }
+    
+    private var teamNamesVsView: some View {
+            HStack {
+                Text(teamOneName)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                Text("Vs")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                Text(teamTwoName)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+            }
+            .padding(.bottom, 10) // Add padding to give some space above the color buttons
+        }
     
     private var homeAndStatsButtons: some View {
         HStack {
@@ -344,7 +369,7 @@ struct PitchView: View {
     
     struct PitchView_Previews: PreviewProvider {
         static var previews: some View {
-            PitchView()
+            PitchView(teamOneName: "Team One", teamTwoName: "Team Two")
         }
     }
     

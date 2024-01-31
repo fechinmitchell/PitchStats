@@ -34,8 +34,9 @@ struct NewGameView: View {
             .cornerRadius(40)
             .padding(.horizontal)
             .fullScreenCover(isPresented: $showingPitchView, content: {
-                PitchView()
+                PitchView(teamOneName: teamOneName, teamTwoName: teamTwoName)
             })
         }
     }
 }
+
