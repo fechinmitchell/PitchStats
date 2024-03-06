@@ -4,15 +4,21 @@
 //
 //  Created by Fechin Mitchell on 14/02/2024.
 //
-
 import SwiftUI
-
 struct PitchDetailView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+    var savedMatch: SavedMatch
 
-#Preview {
-    PitchDetailView()
+    var body: some View {
+        ScrollView {
+            VStack {
+                PitchDisplayView(savedMatch: savedMatch, pitchType: savedMatch.pitchType)
+                    .frame(height: 900) // Adjust the height as needed
+
+                // Convert the CodableMarkers back to Markers here before passing them to StatsView
+                let markers = savedMatch.markers.map { $0.toMarker() }
+                StatsView(stats: savedMatch.stats, teamOneName: savedMatch.teamOneName, teamTwoName: savedMatch.teamTwoName, markers: markers)
+            }
+        }
+        .navigationBarTitle(Text("\(savedMatch.teamOneName) vs \(savedMatch.teamTwoName)"), displayMode: .inline)
+    }
 }

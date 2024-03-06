@@ -16,6 +16,11 @@
 		3C87652D2B4BF791007A7806 /* PitchStatsV2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C87652C2B4BF791007A7806 /* PitchStatsV2UITestsLaunchTests.swift */; };
 		3C87653A2B4BF7BE007A7806 /* NewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8765392B4BF7BE007A7806 /* NewGameView.swift */; };
 		3C8A57752B4BF84E00A0AC64 /* PitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8A57742B4BF84E00A0AC64 /* PitchView.swift */; };
+		3C9803532B74627E003176C5 /* PreviousGamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9803522B74627E003176C5 /* PreviousGamesView.swift */; };
+		3C9803552B758508003176C5 /* PitchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9803542B758508003176C5 /* PitchType.swift */; };
+		3C9803572B7CAC70003176C5 /* PitchDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9803562B7CAC70003176C5 /* PitchDetailView.swift */; };
+		3C9803592B7CB8BD003176C5 /* PitchDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9803582B7CB8BD003176C5 /* PitchDisplayView.swift */; };
+		3CB8DE582B7DDE56008EE7A3 /* SavedMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB8DE572B7DDE56008EE7A3 /* SavedMatch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +54,11 @@
 		3C87652C2B4BF791007A7806 /* PitchStatsV2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchStatsV2UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3C8765392B4BF7BE007A7806 /* NewGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameView.swift; sourceTree = "<group>"; };
 		3C8A57742B4BF84E00A0AC64 /* PitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchView.swift; sourceTree = "<group>"; };
+		3C9803522B74627E003176C5 /* PreviousGamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousGamesView.swift; sourceTree = "<group>"; };
+		3C9803542B758508003176C5 /* PitchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchType.swift; sourceTree = "<group>"; };
+		3C9803562B7CAC70003176C5 /* PitchDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchDetailView.swift; sourceTree = "<group>"; };
+		3C9803582B7CB8BD003176C5 /* PitchDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchDisplayView.swift; sourceTree = "<group>"; };
+		3CB8DE572B7DDE56008EE7A3 /* SavedMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMatch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +116,11 @@
 				3C8765122B4BF791007A7806 /* Assets.xcassets */,
 				3C8765142B4BF791007A7806 /* PitchStatsV2.entitlements */,
 				3C8765152B4BF791007A7806 /* Preview Content */,
+				3C9803522B74627E003176C5 /* PreviousGamesView.swift */,
+				3C9803542B758508003176C5 /* PitchType.swift */,
+				3C9803562B7CAC70003176C5 /* PitchDetailView.swift */,
+				3C9803582B7CB8BD003176C5 /* PitchDisplayView.swift */,
+				3CB8DE572B7DDE56008EE7A3 /* SavedMatch.swift */,
 			);
 			path = PitchStatsV2;
 			sourceTree = "<group>";
@@ -265,10 +280,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CB8DE582B7DDE56008EE7A3 /* SavedMatch.swift in Sources */,
 				3C8765112B4BF78D007A7806 /* ContentView.swift in Sources */,
 				3C8A57752B4BF84E00A0AC64 /* PitchView.swift in Sources */,
 				3C87650F2B4BF78D007A7806 /* PitchStatsV2App.swift in Sources */,
 				3C87653A2B4BF7BE007A7806 /* NewGameView.swift in Sources */,
+				3C9803532B74627E003176C5 /* PreviousGamesView.swift in Sources */,
+				3C9803572B7CAC70003176C5 /* PitchDetailView.swift in Sources */,
+				3C9803552B758508003176C5 /* PitchType.swift in Sources */,
+				3C9803592B7CB8BD003176C5 /* PitchDisplayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

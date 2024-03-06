@@ -8,6 +8,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var showingNewGameView = false
+    @State private var showingPreviousGamesView = false  // Add this line
+
 
     var body: some View {
         ZStack { // Use a ZStack to allow layering of the background behind the VStack
@@ -39,7 +41,7 @@ struct ContentView: View {
                 
                 // New Game button
                 Button("Previous Games") {
-                   // showingNewGameView = true
+                    showingPreviousGamesView = true
                 }
                 .font(.headline)
                 .foregroundColor(.white)
@@ -49,10 +51,11 @@ struct ContentView: View {
                 .cornerRadius(40)
                 .shadow(radius: 5)
                 .padding(.horizontal)
-                .sheet(isPresented: $showingNewGameView) {
-                    NewGameView()
-                }
-
+                .fullScreenCover(isPresented: $showingPreviousGamesView) {
+                                    // Present PreviousGamesView as a full screen cover
+                                    PreviousGamesView()
+                                }
+                
                 // Previous Games button
                 Button("Statistics") {
                     // Action for Previous Games
