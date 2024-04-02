@@ -16,7 +16,7 @@ struct ColorAction: Identifiable, Equatable, Hashable {
 // Part 2: Initialize colorOptions with UIColor
 struct PitchView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var markers: [Marker] = [] // Marker should have a UIColor property for color
+    @State private var markers: [Marker] = []
     @State private var selectedColor: UIColor = .clear
     @State private var showingNumberInput = false
     @State private var showingColorPicker = false
@@ -30,57 +30,49 @@ struct PitchView: View {
         ColorAction(color: UIColor.green, actionName: "Tackle")
     ]
 
-@State private var showingDeletionConfirm = false
+    @State private var showingDeletionConfirm = false
     @State private var colorActionToDelete: ColorAction?
     @State private var showingStats = false
+    
+    @State private var selectedMarkerID: UUID?
 
     var teamOneName: String
     var teamTwoName: String
-    var pitchType: PitchType // Make sure this line exists
-    var gameDate: Date // Add this line
-    let fixedWidth: CGFloat = 1366
-    let fixedHeight: CGFloat = 900
-
+    var pitchType: PitchType
+    var gameDate: Date
 
     var body: some View {
-        ZStack(alignment: .top) {
+        ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
             VStack {
-                //teamNamesVsView // Display team names at the top
                 homeAndStatsButtons.padding(.top, 50)
                 GeometryReader { geometry in
                     Image(pitchType == .gaa ? "GAA_pitch_image" : "Soccer_pitch_image")
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: fixedWidth, height: fixedHeight) // Set the fixed width and height
-                        .onAppear {
-                                    // Print the size for debugging
-                                    print("PitchView size: \(geometry.size)")
-                                }
-                        .contentShape(Rectangle())
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .onEnded({ value in
-                                    let location = geometry.frame(in: .local).contains(value.location) ? value.location : CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
-                                    let x = location.x / geometry.size.width
-                                    let y = location.y / geometry.size.height
-                                    self.newMarkerLocation = CGPoint(x: x, y: y)
-                                    self.showingNumberInput = true
-                                })
-                        )
-                        .overlay(markerOverlay(in: CGSize(width: fixedWidth, height: fixedHeight)))
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: geometry.size.width * 1.3, height: geometry.size.height * 0.75 * 1.3)
+                                .position(x: geometry.size.width / 2, y: (geometry.size.height * 0.75 / 2) + (geometry.size.height * 0.10)) // Adjusted position
+                                .contentShape(Rectangle())
+                                .gesture(
+                                    DragGesture(minimumDistance: 0)
+                                        .onEnded({ value in
+                                            let location = CGPoint(x: value.location.x / (geometry.size.width * 1.3), y: value.location.y / (geometry.size.height * 0.75 * 1.3))
+                                            self.newMarkerLocation = location
+                                            self.showingNumberInput = true
+                                        })
+                                )
+                                .overlay(markerOverlay(in: CGSize(width: geometry.size.width * 1.3, height: geometry.size.height * 0.75 * 1.3)))
                 }
-                .padding(.top, 10)
-                .padding(.bottom, 10)
-            }
-            VStack {
-                Spacer().frame(height: 30)
-                teamNamesVsView // Add this line to display the team names with "Vs"
-                colorButtons.padding(.horizontal).padding(.bottom, 10)
-                Spacer()
-            }
+                                .padding(.top, 10)
+                                .padding(.bottom, 10)
+                            }
+                            VStack {
+                                Spacer().frame(height: 30)
+                                teamNamesVsView // Add this line to display the team names with "Vs"
+                                colorButtons.padding(.horizontal).padding(.bottom, 10)
+                                Spacer()
+                            }
         }
-        .edgesIgnoringSafeArea(.all)
         .sheet(isPresented: $showingNumberInput) {
             numberInputSheet()
         }
@@ -93,8 +85,21 @@ struct PitchView: View {
         .sheet(isPresented: $showingStats) {
             StatsView(stats: self.aggregateStats(markers: self.markers), teamOneName: self.teamOneName, teamTwoName: self.teamTwoName, markers: self.markers)
         }
-    }
-    
+
+        .alert(isPresented: $showingDeletionConfirm) {
+                Alert(
+                    title: Text("Delete Marker"),
+                    message: Text("Are you sure you want to delete this marker?"),
+                    primaryButton: .destructive(Text("Delete")) {
+                        if let id = self.selectedMarkerID {
+                            markers.removeAll { $0.id == id }
+                            self.selectedMarkerID = nil
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
+        }
     // Part 3: Function to check if two UIColors are equivalent
     private func areColorsEquivalent(_ color1: UIColor, _ color2: UIColor) -> Bool {
         return color1.isEqual(color2)
@@ -116,76 +121,76 @@ struct PitchView: View {
     // Part 5: Modify the addMarker function
     private func addMarker(at location: CGPoint, color: UIColor, number: String) {
         guard color != UIColor.clear else { return }
-        markers.append(Marker(id: UUID(), x: location.x, y: location.y, color: color, number: number, isDirectional: false))
+        let normalizedLocation = CGPoint(x: location.x, y: location.y)
+        markers.append(Marker(id: UUID(), x: normalizedLocation.x, y: normalizedLocation.y, color: color, number: number, isDirectional: false))
     }
 
     // Part 6: Adjust numberInputSheet to use UIColor
     private func numberInputSheet() -> some View {
-            VStack(spacing: 20) {
-                Text("Enter the number for the marker")
-                    .font(.headline)
-                
-                TextField("Number", text: $inputNumber)
-                    .keyboardType(.numberPad)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: 200)
-                    .font(.largeTitle)
-                    .overlay(RoundedRectangle(cornerRadius: 10).stroke())
-                    .padding()
-                
-                HStack {
-                    Button("Cancel") {
-                        showingNumberInput = false
-                    }
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color.red)
-                    .cornerRadius(10)
+                VStack(spacing: 20) {
+                    Text("Enter the number for the marker")
+                        .font(.headline)
                     
-                    Button("Submit") {
-                        if !inputNumber.isEmpty {
-                            if let location = newMarkerLocation {
-                                addMarker(at: location, color: selectedColor, number: inputNumber)
-                            }
+                    TextField("Number", text: $inputNumber)
+                        .keyboardType(.numberPad)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: 200)
+                        .font(.largeTitle)
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke())
+                        .padding()
+                    
+                    HStack {
+                        Button("Cancel") {
+                            showingNumberInput = false
                         }
-                        showingNumberInput = false
-                        inputNumber = ""
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.red)
+                        .cornerRadius(10)
+                        
+                        Button("Submit") {
+                            if !inputNumber.isEmpty {
+                                if let location = newMarkerLocation {
+                                    addMarker(at: location, color: selectedColor, number: inputNumber)
+                                }
+                            }
+                            showingNumberInput = false
+                            inputNumber = ""
+                        }
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.green)
+                        .cornerRadius(10)
                     }
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color.green)
-                    .cornerRadius(10)
                 }
+                .padding()
             }
-            .padding()
-        }
     
     // Part 7: Adjust colorPickerSheet to use UIColor
     private func colorPickerSheet() -> some View {
-        VStack {
-            ColorPicker("Pick a new color", selection: $tempSelectedColor, supportsOpacity: false)
-                .padding()
-            TextField("Action Name", text: $tempActionName)
-                .padding()
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke())
-            Button("Confirm Color") {
-                let newColor = UIColor(tempSelectedColor)
-                if !colorOptions.contains(where: { areColorsEquivalent($0.color, newColor) }) && !tempActionName.isEmpty {
-                    colorOptions.append(ColorAction(color: newColor, actionName: tempActionName))
+            VStack {
+                ColorPicker("Pick a new color", selection: $tempSelectedColor, supportsOpacity: false)
+                    .padding()
+                TextField("Action Name", text: $tempActionName)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke())
+                Button("Confirm Color") {
+                    let newColor = UIColor(tempSelectedColor)
+                    if !colorOptions.contains(where: { areColorsEquivalent($0.color, newColor) }) && !tempActionName.isEmpty {
+                        colorOptions.append(ColorAction(color: newColor, actionName: tempActionName))
+                    }
+                    showingColorPicker = false
+                    tempActionName = ""
+                    tempSelectedColor = .clear
                 }
-                showingColorPicker = false
-                tempActionName = ""
-                tempSelectedColor = .clear
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
             }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
         }
-    }
-    
     // Part 8: Update markerOverlay to convert UIColor to Color
     private func markerOverlay(in size: CGSize) -> some View {
             ForEach($markers, id: \.id) { $marker in // Use \.id for identifying markers
@@ -197,14 +202,20 @@ struct PitchView: View {
                         .font(.caption)
                         .foregroundColor(.white))
                         .position(x: size.width * $marker.x.wrappedValue, y: size.height * $marker.y.wrappedValue)
-
-                    if $marker.isDirectional.wrappedValue, let endX = $marker.endX.wrappedValue, let endY = $marker.endY.wrappedValue {
-                        ArrowShape(
-                            start: CGPoint(x: size.width * $marker.x.wrappedValue, y: size.height * $marker.y.wrappedValue),
-                            end: CGPoint(x: endX, y: endY)
-                        )
-                        .stroke(Color($marker.color.wrappedValue), lineWidth: 2) // Convert UIColor to Color
-                    }
+                        .gesture(LongPressGesture(minimumDuration: 1).onEnded { _ in
+                                            self.selectedMarkerID = $marker.id.wrappedValue
+                                            // Trigger your deletion confirmation UI here, for example, setting a Bool state variable to show an alert
+                                            self.showingDeletionConfirm = true
+                                        })
+                    
+                    //Arrow Function Commented out becaue of importing issues
+                    //                    if $marker.isDirectional.wrappedValue, let endX = $marker.endX.wrappedValue, let endY = $marker.endY.wrappedValue {
+                    //                        ArrowShape(
+                    //                            start: CGPoint(x: size.width * $marker.x.wrappedValue, y: size.height * $marker.y.wrappedValue),
+                    //                            end: CGPoint(x: endX, y: endY)
+                    //                        )
+                    //                        .stroke(Color($marker.color.wrappedValue), lineWidth: 2) // Convert UIColor to Color
+                    //                    }
                 }
                 .gesture(
                     DragGesture()
